@@ -2,12 +2,21 @@
 
 import * as fetch from '../fetching/fetchingType';
 import Logging from '../../logging/logging';
+import * as parseType from './parsingType';
 
-export async function parsePointHistory(productdetail:fetch.ProductDetails):Promise<number|null>{
+
+  export async function parsePointHistory(productdetail:fetch.ProductDetails):Promise<parseType.PointHistory|null>{
     try{
-        return productdetail.offers[0]?.promotions?.[0]?.savings ?? null;
-    } catch(error){
-        Logging.error(error + " imported product id: " + productdetail.code);
+        if( typeof productdetail.offers?.[0]?.promotions?.[0]?.savings === 'number' &&
+            productdetail.offers[0].promotions[0].savings > 0){
+            return {
+                point: productdetail.offers[0]?.promotions?.[0]?.savings,
+                point_details: productdetail.offers[0]?.promotions?.[0]?.text ?? null
+              }
+        } 
         return null;
-    }
+      } catch(error){
+          Logging.error(error + " imported product id: " + productdetail.code);
+          return null;
+      }
   }
