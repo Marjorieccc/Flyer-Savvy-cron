@@ -16,6 +16,11 @@ export type PriceHistory = {
     original_price: number | null
 }
 
+export type PointHistory = {
+    point: number,
+    point_details: string | null
+}
+
 export type Flyer = {
     imported_flyer_id: string,
     valid_from: string | null;  //  valid_from: Date | null;
