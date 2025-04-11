@@ -4,15 +4,15 @@ import { db, schema } from '../db' ;
 import { eq, and } from 'drizzle-orm';
 import Logging from '../../../logging/logging';
 
-export async function getPointHistoryID(product_id: number, flyer_id: number):Promise<number|null>{
+export async function getPointHistoryID(productId: number, flyerId: number):Promise<number|null>{
     try{
-        const pointHistory = await db.query.point_history.findFirst({
+        const pointHistory = await db.query.pointHistory.findFirst({
             where: and(
-                eq(schema.price_history.product_id, product_id),
-                eq(schema.price_history.flyer_id, flyer_id)
+                eq(schema.pointHistory.productId, productId),
+                eq(schema.priceHistory.flyerId, flyerId)
             )
         });
-        return pointHistory? pointHistory.point_history_id : null;
+        return pointHistory? pointHistory.pointHistoryId : null;
     }catch (error){
         Logging.error(error);
         return null;
@@ -21,19 +21,19 @@ export async function getPointHistoryID(product_id: number, flyer_id: number):Pr
 
 export async function addPointHistory(
     point: number,
-    product_id: number,
-    flyer_id: number,
-    point_details:string | null):Promise<number|null>{
+    productId: number,
+    flyerId: number,
+    pointDetails:string | null):Promise<number|null>{
     try{
-        const newPointHistory = await db.insert(schema.point_history).values({
+        const newPointHistory = await db.insert(schema.pointHistory).values({
             point,
-            product_id,
-            flyer_id,
-            point_details
+            productId,
+            flyerId,
+            pointDetails
         });
         return newPointHistory[0].insertId;
     } catch(error) {
-        Logging.error(error + " Product: " + product_id + " flyer: " + flyer_id);
+        Logging.error(error + " Product: " + productId + " flyer: " + flyerId);
         return null;
     }                    
 }

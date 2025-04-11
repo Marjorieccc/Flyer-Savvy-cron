@@ -4,33 +4,33 @@ import { db, schema } from '../db' ;
 import { eq, and } from 'drizzle-orm';
 import Logging from '../../../logging/logging';
 
-export async function getStoreID(imported_store_id: string,grocery_id:number):Promise<number|null>{
+export async function getStoreID(importedStoreId: string,groceryId:number):Promise<number|null>{
     try{
         const store = await db.query.store.findFirst({
             where: and(
-                eq(schema.store.imported_store_id, imported_store_id),
-                eq(schema.store.grocery_id, grocery_id)
+                eq(schema.store.importedStoreId, importedStoreId),
+                eq(schema.store.groceryId, groceryId)
             )
         });
-        return store? store.grocery_id : null;
+        return store? store.groceryId : null;
     }catch (error){
         Logging.error(error);
         return null;
     }
 }
 
-export async function addStore(imported_store_id: string,
-    store_name: string,
+export async function addStore(importedStoreId: string,
+    storeName: string,
     address: string,
-    postal_code: string,
-    grocery_id: number):Promise<number|null>{
+    postalCode: string,
+    groceryId: number):Promise<number|null>{
     try{
         const newStore = await db.insert(schema.store).values({ 
-            imported_store_id,
-            store_name,
+            importedStoreId,
+            storeName,
             address,
-            postal_code,
-            grocery_id
+            postalCode,
+            groceryId
         });
         return newStore[0].insertId;
     } catch(error) {

@@ -4,12 +4,12 @@ import { db, schema } from '../db' ;
 import Logging from '../../../logging/logging';
 
 
-export async function addFlyerStore(flyer_id: number, store_id: number):Promise<boolean>{
+export async function addFlyerStore(flyerId: number, storeId: number):Promise<boolean>{
     try {
-        const result = await db.insert(schema.flyer_store).values({
-            flyer_id,
-            store_id
-        }).onDuplicateKeyUpdate({ set: { flyer_id: flyer_id, store_id: store_id} });
+        const result = await db.insert(schema.flyerStore).values({
+            flyerId,
+            storeId
+        }).onDuplicateKeyUpdate({ set: { flyerId: flyerId, storeId: storeId} });
         return result? true : false;
     }catch(error) {
         Logging.error(error);

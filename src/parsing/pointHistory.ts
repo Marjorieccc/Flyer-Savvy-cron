@@ -11,7 +11,7 @@ import * as parseType from './parsingType';
             productdetail.offers[0].promotions[0].savings > 0){
             return {
                 point: productdetail.offers[0]?.promotions?.[0]?.savings,
-                point_details: productdetail.offers[0]?.promotions?.[0]?.text ?? null
+                pointDetails: productdetail.offers[0]?.promotions?.[0]?.text ?? null
               }
         } 
         return null;

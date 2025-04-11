@@ -21,12 +21,12 @@ export async function parseProduct(productdetail:fetch.ProductDetails):Promise<p
         }
 
         return{
-            imported_product_code: productdetail.code,
-            product_name: productdetail.name ?? null,
+            importedProductCode: productdetail.code,
+            productName: productdetail.name ?? null,
             brand: productdetail.brand ?? null,
-            package_size: packageSize,
-            package_unit: packageUnit,
-            image_url: productdetail.imageAssets[0]?.smallUrl?? null
+            packageSize: packageSize,
+            packageUnit: packageUnit,
+            imageUrl: productdetail.imageAssets[0]?.smallUrl?? null
         }
     } catch(error){
         Logging.error;
