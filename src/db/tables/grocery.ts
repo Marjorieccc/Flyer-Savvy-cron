@@ -5,21 +5,21 @@ import { eq } from 'drizzle-orm';
 import Logging from '../../../logging/logging';
 
 
-export async function getGroceryID(grocery_name: string):Promise<number|null>{
+export async function getGroceryID(groceryName: string):Promise<number|null>{
     try{
         const grocery = await db.query.grocery.findFirst({
-            where: eq(schema.grocery.grocery_name, grocery_name)
+            where: eq(schema.grocery.groceryName, groceryName)
         });
-        return grocery? grocery.grocery_id : null;
+        return grocery? grocery.groceryId : null;
     }catch (error){
         Logging.error(error);
         return null;
     }
 }
 
-export async function addGrocery(grocery_name: string,):Promise<number|null>{
+export async function addGrocery(groceryName: string,):Promise<number|null>{
     try{
-        const newGrocery = await db.insert(schema.grocery).values({ grocery_name});
+        const newGrocery = await db.insert(schema.grocery).values({ groceryName});
         return newGrocery[0].insertId; // Return id of inserted record
     } catch(error) {
         Logging.error(error);

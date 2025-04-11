@@ -4,14 +4,14 @@ import * as db from '../db/tables/table';
 import * as parseType from '../parsing/parsingType'
 import Logging from '../../logging/logging';
 
-export async function processFlyer(grocery_id: number, flyer: parseType.Flyer):Promise<{ flyerID: number|null, isNew: boolean }>{
+export async function processFlyer(groceryId: number, flyer: parseType.Flyer):Promise<{ flyerID: number|null, isNew: boolean }>{
     try{
        
-        const existFlyerID = await db.getFlyerID(flyer.imported_flyer_id, grocery_id);
-        if(existFlyerID) {
-            return {flyerID:existFlyerID, isNew: false};
+        const existFlyerId = await db.getFlyerID(flyer.importedFlyerId, groceryId);
+        if(existFlyerId) {
+            return {flyerID:existFlyerId, isNew: false};
         }
-        const newFlyerID = await db.addFlyer(flyer.imported_flyer_id, flyer.valid_from, flyer.valid_to);
+        const newFlyerID = await db.addFlyer(flyer.importedFlyerId, flyer.validFrom, flyer.validTo);
         Logging.info("added flyer");
         return {flyerID:newFlyerID, isNew: true};
     } catch(error){
@@ -21,17 +21,17 @@ export async function processFlyer(grocery_id: number, flyer: parseType.Flyer):P
 }
 
 // need change
-export async function processFlyerStore(grocery_id: number, flyer_id: number, imported_store_id: string){
+export async function processFlyerStore(groceryId: number, flyerId: number, importedStoreId: string){
     try{
-        const storeID = await db.getStoreID(imported_store_id, grocery_id);
-        if(!storeID) {
-            const msg = `${imported_store_id} not existed in database`;
+        const storeId = await db.getStoreID(importedStoreId, groceryId);
+        if(!storeId) {
+            const msg = `${importedStoreId} not existed in database`;
             Logging.error(msg); 
             return ;
         }
-        const result = await db.addFlyerStore(flyer_id, storeID);
+        const result = await db.addFlyerStore(flyerId, storeId);
         if(!result){
-            const msg = `Fail to update flyer-store update flyer: ${flyer_id} and store: ${imported_store_id}`;
+            const msg = `Fail to update flyer-store update flyer: ${flyerId} and store: ${importedStoreId}`;
             Logging.error(msg); 
         }
     } catch(error){
@@ -39,47 +39,47 @@ export async function processFlyerStore(grocery_id: number, flyer_id: number, im
     }
 }
 
-export async function processProduct(grocery_id: number, productData: parseType.Product):Promise<number|null>{
+export async function processProduct(groceryId: number, productData: parseType.Product):Promise<number|null>{
     try{
-        const existProductID = await db.getProductID(productData.imported_product_code, grocery_id);
-        if(existProductID){
-            return existProductID;
+        const existProductId = await db.getProductID(productData.importedProductCode, groceryId);
+        if(existProductId){
+            return existProductId;
         }
-        const newProductID = await db.addProduct(
-            productData.imported_product_code,
-            productData.product_name,
+        const newProductId = await db.addProduct(
+            productData.importedProductCode,
+            productData.productName,
             productData.brand,
-            productData.package_size,
-            productData.package_unit,
-            productData.image_url,
-            grocery_id
+            productData.packageSize,
+            productData.packageUnit,
+            productData.imageUrl,
+            groceryId
         );
-        return newProductID ? newProductID : null;
+        return newProductId ? newProductId : null;
     } catch(error){
         Logging.error;
         return null;
     }
 }
 
-export async function processPriceHistory(product_id: number, flyer_id: number,priceData: parseType.PriceHistory):Promise<number|null>{
+export async function processPriceHistory(productId: number, flyerId: number,priceData: parseType.PriceHistory):Promise<number|null>{
     try{
-        const existPriceHistoryID = await db.getPriceHistoryID(product_id, flyer_id);
-        if(existPriceHistoryID){
-            const msg = `Price history record already existed:  ${existPriceHistoryID}`;
+        const existPriceHistoryId = await db.getPriceHistoryID(productId, flyerId);
+        if(existPriceHistoryId){
+            const msg = `Price history record already existed:  ${existPriceHistoryId}`;
             Logging.info(msg);
-            return existPriceHistoryID;
+            return existPriceHistoryId;
         }
-        const newPriceID = await db.addPriceHistory(
+        const newPriceId = await db.addPriceHistory(
             priceData.price,
             priceData.unit,
-            priceData.price_per_quantity,
+            priceData.pricePerQuantity,
             priceData.quantity,
-            priceData.member_price,
-            priceData.original_price,
-            product_id,
-            flyer_id
+            priceData.memberPrice,
+            priceData.originalPrice,
+            productId,
+            flyerId
         );
-        return newPriceID ? newPriceID : null;
+        return newPriceId ? newPriceId : null;
     } catch(error){
         Logging.error;
         // Return null to indicate process point data failure
@@ -87,20 +87,20 @@ export async function processPriceHistory(product_id: number, flyer_id: number,p
     }
 }
 
-export async function processPointHistory(product_id: number, flyer_id: number,point: number):Promise<number|null>{
+
+export async function processPointHistory(productId: number, flyerId: number,pointData: parseType.PointHistory):Promise<number|null>{
     try{
-        const existPointHistoryID = await db.getPointHistoryID(product_id, flyer_id);
-        if(existPointHistoryID){
-            const msg = `Point history record already existed:  ${existPointHistoryID}`;
+        const existPointHistoryId = await db.getPointHistoryID(productId, flyerId);
+        if(existPointHistoryId){
+            const msg = `Point history record already existed:  ${existPointHistoryId}`;
             Logging.info(msg);
-            return existPointHistoryID;
+            return existPointHistoryId;
         }
-        const newPointID =  await db.addPointHistory(point, product_id, flyer_id);
-        return newPointID? newPointID : null;
+        const newPointId =  await db.addPointHistory(pointData.point, productId, flyerId, pointData.pointDetails);
+        return newPointId? newPointId : null;
     } catch(error){
         Logging.error;
         // Return null to indicate process point data failure
         return null;
     }
 }
-

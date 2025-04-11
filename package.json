@@ -5,7 +5,7 @@
   "scripts": {
     "start": "tsx --env-file=.env src/index.ts",
     "connect": "tsx --env-file=.env src/testconnection.ts",
-    "migrate": "tsx --env-file=.env src/drizzle/migrate.ts",
+    "migrate": "tsx --env-file=.env src/drizzle/migration.ts",
     "db": "drizzle-kit generate",
     "gui": "npx drizzle-kit studio"
   },
@@ -17,14 +17,14 @@
     "@types/node": "^20.13.0",
     "axios": "^1.7.2",
     "cloudinary": "^2.2.0",
-    "drizzle-orm": "^0.31.0",
+    "drizzle-orm": "^0.41.0",
     "mysql2": "^3.10.0",
     "sharp": "^0.33.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.11.0"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.22.1",
+    "drizzle-kit": "^0.30.6",
     "typescript": "^5.4.5"
   }
 }
